@@ -1,0 +1,89 @@
+<div class="row">
+    <p-toast position="center" key="tl"></p-toast>
+    <div class="col-md-12">
+        <div class="card card-success">
+            <div class="card-header">                    
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3 class="card-title">Registro</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <form [formGroup]="myForm" #Tablefrm="ngForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <h6>Municipio</h6>
+                                <input 
+                                    type="text" 
+                                    readonly="readonly"
+                                    formControlName="Nombre"
+                                    class="form-control" 
+                                    [ngClass]="{ 'is-invalid': f.Nombre.invalid && (f.Nombre.dirty || f.Nombre.touched) }"
+                                    aria-label="Registre un municipio" aria-describedby="basic-addon2">
+                                <div *ngIf="f.Nombre.errors && (f.Nombre.dirty || f.Nombre.touched)" class="invalid-feedback">
+                                    <div>El nombre del municipio es requerido</div>
+                                </div>
+                            </div>
+                        </div>                        
+                        <div class="col-md-6">
+                            <h6>Departamento</h6>
+                            <div class="input-group mb-3">                                
+                                <select
+                                    class="browser-default custom-select"
+                                    formControlName="DepartamentoId"
+                                    [ngClass]="{ 'is-invalid': f.DepartamentoId.invalid && (f.DepartamentoId.dirty || f.DepartamentoId.touched) }">
+                                    <option value="-1">--seleccione un registro--</option>
+                                    <option value="1">Antioquia</option>
+                                </select>
+                                <div *ngIf="f.AddresseeId.errors && (f.AddresseeId.dirty || f.AddresseeId.touched)" class="invalid-feedback">
+                                    <div>El Departamento es requerido</div>
+                                </div>
+                            </div>                            
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <h6>Código DANE</h6>
+                                <input 
+                                    id="Subject" 
+                                    type="text" 
+                                    class="form-control" 
+                                    formControlName="CodigoDANE"
+                                    [ngClass]="{ 'is-invalid': f.CodigoDANE.invalid && (f.CodigoDANE.dirty || f.CodigoDANE.touched) }" />
+                                <div *ngIf="f.CodigoDANE.errors && (f.CodigoDANE.dirty || f.CodigoDANE.touched)" class="invalid-feedback">
+                                    <div>El Código DANE es requerido</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <h6>¿Es Distrito?</h6>
+                                <!--[(ngModel)]="value1" -->
+                                <p-selectButton 
+                                    [options]="stateOptions" 
+                                    formControlName="EsDistrito"
+                                    optionLabel="label" 
+                                    optionValue="value">
+                                </p-selectButton>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <button
+                                pButton
+                                pRipple
+                                type="button"
+                                label="Guardar"
+                                class="p-button-success"
+                                [disabled]="!myForm.valid"></button>
+                        </div>
+                    </div>     
+                </form>                
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000"></p-confirmDialog>
+
+<p-toast></p-toast>

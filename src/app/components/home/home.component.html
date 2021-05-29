@@ -1,0 +1,230 @@
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <p class="lead">Municipios</p>
+    </div>
+    <div class="col-md-6" style="text-align: right;">
+        <button pButton pRipple Nombre="button" icon="pi pi-plus-circle" class="p-button-rounded" (click)="displayModal=true; this.isNew = true; myForm.reset();"></button>
+    </div>
+</div>    
+<p-table 
+    #dtCor 
+    [value]="results"
+    selectionMode="single"    
+    dataKey="Id"
+    styleClass="p-datatable-correspondences"    
+    [rows]="5"
+    [paginator]="true" 
+    stateStorage="local"
+    stateKey="statedemo-local">
+    <ng-template pTemplate="header">
+        <tr>                                        
+            <th pSortableColumn="Id">ID <p-sortIcon field="Id"></p-sortIcon></th>
+            <th pSortableColumn="Nombre">Municipio <p-sortIcon field="Nombre"></p-sortIcon></th>            
+            <th pSortableColumn="CodigoDANE">Código DANE <p-sortIcon field="CodigoDANE"></p-sortIcon></th>
+            <th pSortableColumn="EsDistrito">¿Es Distrito?<p-sortIcon field="EsDistrito"></p-sortIcon></th>
+            <th pSortableColumn="Acciones">Acciones</th>
+        </tr>
+        <tr>
+            <th>
+                <input 
+                    pInputText 
+                    Nombre="text" 
+                    (input)="dtCor.filter($event.target.value, 'Id', 'contains')" 
+                    [value]="dtCor.filters['Id']?.value" 
+                    placeholder="Buscar por Id" 
+                    class="p-column-filter">
+            </th>
+            <th>
+                <input 
+                    pInputText 
+                    Nombre="text" 
+                    (input)="dtCor.filter($event.target.value, 'Nombre', 'contains')" 
+                    [value]="dtCor.filters['Nombre']?.value" 
+                    placeholder="Buscar por Municipio" 
+                    class="p-column-filter">
+            </th>            
+            <th>
+                <input 
+                    pInputText Nombre="text" 
+                    (input)="dtCor.filter($event.target.value, 'CodigoDANE', 'contains')" 
+                    [value]="dtCor.filters['CodigoDANE']?.value" 
+                    placeholder="Buscar por Código DANE" 
+                    class="p-column-filter">
+            </th>
+            <th>
+                <input 
+                    pInputText Nombre="text" 
+                    (input)="dtCor.filter($event.target.value, 'EsDistrito', 'contains')" 
+                    [value]="dtCor.filters['EsDistrito']?.value" 
+                    placeholder="Buscar por Es Distrito" 
+                    class="p-column-filter">
+            </th>
+            <th>                                            
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-result>
+        <tr>
+            <td>                  
+                {{result.Id}}
+            </td>
+            <td>
+                {{result.Nombre}}
+            </td>
+            <td>
+                {{result.CodigoDANE}}
+            </td>
+            <td>
+                {{result.EsDistrito === true ? "Si" : "No"}}
+            </td>
+            <td>
+                <div class="row" style="text-align:center;">
+                    <div class="col-md-2">
+                        <button 
+                            pButton
+                            pRipple
+                            Nombre="button"
+                            icon="pi pi-trash"
+                            (click)="confirmDelete(result.Id)"
+                            class="p-button-rounded p-button-info p-button-danger">
+                        </button>
+                    </div>
+                    <div class="col-md-2">
+                        <button 
+                            pButton
+                            pRipple
+                            Nombre="button"
+                            icon="pi pi-pencil"
+                            (click)="editModal(result)"
+                            class="p-button-rounded p-button-info p-button-success">
+                        </button>
+                    </div>
+                </div>
+            </td>            
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="4">No correspondences found.</td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<p-dialog 
+    header="" 
+    [(visible)]="displayModal"
+    [modal]="true" 
+    [style]="{width: '80vw'}" 
+    [baseZIndex]="10000" 
+    [draggable]="false" 
+    [resizable]="false"
+    [closable]="false">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-success">
+                <div class="card-header">
+                    <h3 class="card-title">Crear Municipio</h3>
+                </div>
+                <div class="card-body">
+                    <div class="card card-success">
+                        <div class="card-header">                    
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h3 class="card-title">Registro</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form [formGroup]="myForm" #Tablefrm="ngForm">
+                                <div class="row">
+                                    <p-toast position="center" key="tl"></p-toast>
+                                    <div class="col-md-12">
+                                        <div class="card card-success">                                            
+                                            <div class="card-body">
+                                                <form [formGroup]="myForm" #Tablefrm="ngForm">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <h6>Municipio</h6>
+                                                                <input 
+                                                                    Nombre="text"
+                                                                    formControlName="Nombre"
+                                                                    class="form-control" 
+                                                                    [ngClass]="{ 'is-invalid': f.Nombre.invalid && (f.Nombre.dirty || f.Nombre.touched) }"
+                                                                    aria-label="Registre un municipio" aria-describedby="basic-addon2">
+                                                                <div *ngIf="f.Nombre.errors && (f.Nombre.dirty || f.Nombre.touched)" class="invalid-feedback">
+                                                                    <div>El nombre del municipio es requerido</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>                        
+                                                        <div class="col-md-6">
+                                                            <h6>Departamento</h6>
+                                                            <div class="input-group mb-3">                                
+                                                                <select
+                                                                    class="browser-default custom-select"
+                                                                    formControlName="DepartamentoId"
+                                                                    [ngClass]="{ 'is-invalid': f.DepartamentoId.invalid && (f.DepartamentoId.dirty || f.DepartamentoId.touched) }">
+                                                                    <option *ngFor="let dep of deptos" [value]="dep.Id">{{ dep.Nombre }}</option>
+                                                                </select>
+                                                                <div *ngIf="f.DepartamentoId.errors && (f.DepartamentoId.dirty || f.DepartamentoId.touched)" class="invalid-feedback">
+                                                                    <div>El Departamento es requerido</div>
+                                                                </div>
+                                                            </div>                            
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <h6>Código DANE</h6>
+                                                                <input 
+                                                                    id="EsDistrito" 
+                                                                    Nombre="text" 
+                                                                    class="form-control" 
+                                                                    formControlName="CodigoDANE"
+                                                                    [ngClass]="{ 'is-invalid': f.CodigoDANE.invalid && (f.CodigoDANE.dirty || f.CodigoDANE.touched) }" />
+                                                                <div *ngIf="f.CodigoDANE.errors && (f.CodigoDANE.dirty || f.CodigoDANE.touched)" class="invalid-feedback">
+                                                                    <div>El Código DANE es requerido</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <h6>¿Es Distrito?</h6>
+                                                                <!--[(ngModel)]="value1" -->
+                                                                <p-selectButton 
+                                                                    [options]="stateOptions" 
+                                                                    formControlName="EsDistritoOpt"
+                                                                    optionLabel="label" 
+                                                                    optionValue="value">
+                                                                </p-selectButton>
+                                                            </div>
+                                                        </div>                                                        
+                                                    </div>     
+                                                </form>                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>                
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p-footer>            
+        <button Nombre="button" pButton (click)="displayModal=false;" label="Cerrar" class="ui-button-secondary"></button>
+        <button 
+            pButton 
+            pRipple 
+            Nombre="button" 
+            label="Guardar"             
+            class="p-button-success"
+            [disabled]="!myForm.valid"
+            (click)="insertOrupdate()">
+        </button>
+    </p-footer>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000"></p-confirmDialog>
+<ngx-ui-loader></ngx-ui-loader>
+<p-toast></p-toast>
